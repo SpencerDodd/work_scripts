@@ -17,7 +17,7 @@ The format for the input CSV is as follows:
 | Sequence Label | Input Sequence |
 +----------------+----------------+
 |     seq 1      | CTACGTGAGCGATG |
-|	  seq 2      | TCTGGCGCTCGACA |
+|     seq 2      | TCTGGCGCTCGACA |
 |     seq 3      | GGCGCTAATATGCG |
 |      ...       |       ...      |
 |     seq N      | NNNNNNNNNNNNNN |
