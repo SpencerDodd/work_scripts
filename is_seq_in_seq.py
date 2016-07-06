@@ -48,6 +48,7 @@ class SeqSearch:
 		Fix this Fix this Fix this Fix this Fix this Fix this Fix this Fix this 
 		"""
 
+		self.identity_cutoff = 60
 		self.searching = True
 		self.minimum_search_length = 10
 		self.input_sequences = {}
@@ -61,8 +62,8 @@ class SeqSearch:
 
 		# output data
 		self.log = ""
-		self.successes = ""
-		self.failures = ""
+		# self.successes = "" 										#unused
+		# self.failures = "" 										#unused
 
 
 	"""
@@ -234,12 +235,14 @@ class SeqSearch:
 
 		selected_results = []
 
+		self.log_line("PERCENT IDENTITY CUTOFF: {}".format(self.identity_cutoff))
+
 		for index, result in enumerate(self.matched_sequences):
 			search_fasta = self.input_sequences[result.search_seq]
 			target_fasta = self.target_sequences[result.target_seq]
 			percent_hit_identity = float(len(result.match_contig)) / len(search_fasta) * 100
 
-			if percent_hit_identity > 80.0 and result.search_seq not in selected_results:
+			if percent_hit_identity > self.identity_cutoff and result.search_seq not in selected_results:
 
 				selected_results.append(result.search_seq)
 
