@@ -47,8 +47,8 @@ class SeqSearch:
 		self.matched_sequences = []
 
 		# makes all of the directories
-		#self.makedir(self.root_directory)
-		#self.makedir(self.run_directory)
+		self.makedir(self.root_directory)
+		self.makedir(self.run_directory)
 
 		# output data
 		self.log = ""
@@ -76,6 +76,12 @@ class SeqSearch:
 			os.makedirs(dir_to_make)
 		else:
 			print "directory already exists: {}".format(dir_to_make)
+
+	"""
+	Adds string to the log
+	"""
+	def log_line(self, string_to_log):
+		self.log += str(string_to_log) + "\n"
 
 	"""
 	------------------------------------------------------------------------
@@ -201,7 +207,7 @@ class SeqSearch:
 
 
 			else:
-				target_name += str(len(self.target_sequences))
+				target_name = os.path.split(target_file_path)[-1]
 				target_sequence = target_data.replace("\n","")
 
 				self.target_sequences[target_name] = target_sequence
@@ -228,14 +234,21 @@ class SeqSearch:
 
 				selected_results.append(result.search_seq)
 
-				print "--------RESULT {} ----------------------------".format(len(selected_results)+1)
-				print "Search sequence: {}".format(result.search_seq)
-				print "Search FASTA: {}".format(search_fasta)
-				print "Match FASTA: {}".format(result.match_contig)
-				print "Target sequence: {}".format(result.target_seq)
-				print "Target FASTA: {}".format(target_fasta)
-				print "Percent Hit Identity: {}".format(percent_hit_identity)
-				print "----------------------------------------------"
+				self.log_line("--------RESULT {} ----------------------------".format(len(selected_results)+1))
+				self.log_line("Search sequence: {}".format(result.search_seq))
+				self.log_line("Search FASTA: {}".format(search_fasta))
+				self.log_line("Match FASTA: {}".format(result.match_contig))
+				self.log_line("Target sequence: {}".format(result.target_seq))
+				self.log_line("Target FASTA: {}".format(target_fasta))
+				self.log_line("Percent Hit Identity: {}".format(percent_hit_identity))
+				self.log_line("----------------------------------------------")
+
+		print self.log
+
+		# output log to results file
+		with open(self.run_directory+"results.txt", "wb") as save_file:
+			save_file.write(self.log)
+			save_file.close()
 
 
 
@@ -247,6 +260,7 @@ class SeqSearch:
 		self.get_input_sequences()
 		self.search_for_sequence()
 		self.return_results()
+
 
 
 """
