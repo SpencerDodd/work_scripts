@@ -13,15 +13,15 @@ sequences.
 
 The format for the input CSV is as follows:
 
-+----------------+----------------+
-| Sequence Label | Input Sequence |
-+----------------+----------------+
-|     seq 1      | CTACGTGAGCGATG |
-|     seq 2      | TCTGGCGCTCGACA |
-|     seq 3      | GGCGCTAATATGCG |
-|      ...       |       ...      |
-|     seq N      | NNNNNNNNNNNNNN |
-+----------------+----------------+
++----------------+----------------+------------------+
+| Sequence Label | Input Sequence | Primer Direction |
++----------------+----------------+------------------+
+|     seq 1      | CTACGTGAGCGATG |         F        |
+|     seq 2      | TCTGGCGCTCGACA |         R        |
+|     seq 3      | GGCGCTAATATGCG |         R        |
+|      ...       |       ...      |        ...       |
+|     seq N      | NNNNNNNNNNNNNN |         F        |
++----------------+----------------+------------------+
 
 The script uses simple string regex'ing, but could be modified to use sequence alignment
 algorithms such as the Clustal Omega cli. 
@@ -39,6 +39,15 @@ class SeqSearch:
 		self.target_sequence_path = "/Users/sdodd/Documents/Data/Sequencing/Results/2016-07-01-1/"#str(raw_input("Target Sequences Folder: "))
 
 		# Search data
+		"""
+		Hack work-around because I don't have time.
+		Fix this Fix this Fix this Fix this Fix this Fix this Fix this Fix this 
+		"""
+		self.reverse_primer = True # TODO TODO REMOVE THIS AND READ THIS VALUE PER SEQUENCE FROM CSV
+		"""
+		Fix this Fix this Fix this Fix this Fix this Fix this Fix this Fix this 
+		"""
+
 		self.searching = True
 		self.minimum_search_length = 10
 		self.input_sequences = {}
@@ -234,7 +243,7 @@ class SeqSearch:
 
 				selected_results.append(result.search_seq)
 
-				self.log_line("--------RESULT {} ----------------------------".format(len(selected_results)+1))
+				self.log_line("--------RESULT {} ----------------------------".format(len(selected_results)))
 				self.log_line("Search sequence: {}".format(result.search_seq))
 				self.log_line("Search FASTA: {}".format(search_fasta))
 				self.log_line("Match FASTA: {}".format(result.match_contig))
