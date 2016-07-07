@@ -36,19 +36,19 @@ class SeqSearch:
 		self.root_directory = "/Users/sdodd/Documents/Data/SeqSearch/"
 		self.run_directory = self.root_directory+"{}_seq_search/".format(self.initial_timestamp)
 		self.input_csv_path = "/Users/sdodd/Desktop/psm.csv"#str(raw_input("Input CSV location: "))
-		self.target_sequence_path = "/Users/sdodd/Documents/Data/Sequencing/Results/2016-07-01-1/"#str(raw_input("Target Sequences Folder: "))
+		self.target_sequence_path = "/Users/sdodd/Documents/Data/Sequencing/Results/2016-07-01/"#str(raw_input("Target Sequences Folder: "))
 
 		# Search data
 		"""
 		Hack work-around because I don't have time.
 		Fix this Fix this Fix this Fix this Fix this Fix this Fix this Fix this 
-		"""
+		
 		self.reverse_primer = True # TODO TODO REMOVE THIS AND READ THIS VALUE PER SEQUENCE FROM CSV
-		"""
+		
 		Fix this Fix this Fix this Fix this Fix this Fix this Fix this Fix this 
 		"""
 
-		self.identity_cutoff = 60
+		self.identity_cutoff = 40
 		self.searching = True
 		self.minimum_search_length = 10
 		self.input_sequences = {}
@@ -173,20 +173,29 @@ class SeqSearch:
 	Adds all of the target sequences in the selected file folder path to the
 	search.
 	"""
-	def get_target_sequences(self):
+	def get_target_sequences(self, target_sequence_path):
 
 		# if the path is a directory of sequences
-		if os.path.isdir(self.target_sequence_path):
+		if os.path.isdir(target_sequence_path):
 
-			for file_path in os.listdir(self.target_sequence_path):
+			print "list dir: {}".format(os.listdir(target_sequence_path))
+			for file_path in os.listdir(target_sequence_path):
+
+				print "file path: {}".format(file_path)
+
+				# if the path is another nested directory
+				if os.path.isdir(target_sequence_path+file_path):
+					print "getting sequences from nested dir: {}".format(target_sequence_path+file_path)
+					self.get_target_sequences(target_sequence_path+file_path)
+
 				if file_path[-4:] == ".seq":
 					# format the file path
-					if self.target_sequence_path[-1] == "/":
-						full_file_path = self.target_sequence_path + file_path
+					if target_sequence_path[-1] == "/":
+						full_file_path = target_sequence_path + file_path
 						print 'adding target file: {}'.format(full_file_path)
 						self.get_target_sequence(full_file_path)
 					else:
-						full_file_path = self.target_sequence_path + "/" + file_path
+						full_file_path = target_sequence_path + "/" + file_path
 						print 'adding target file: {}'.format(full_file_path)
 						self.get_target_sequence(full_file_path)
 		# if the path is a single sequence file
@@ -268,7 +277,7 @@ class SeqSearch:
 	Runs the show
 	"""
 	def run(self):
-		self.get_target_sequences()
+		self.get_target_sequences(self.target_sequence_path)
 		self.get_input_sequences()
 		self.search_for_sequence()
 		self.return_results()
