@@ -13,15 +13,15 @@ sequences.
 
 The format for the input CSV is as follows:
 
-+----------------+----------------+------------------+
-| Sequence Label | Input Sequence | Primer Direction |
-+----------------+----------------+------------------+
-|     seq 1      | CTACGTGAGCGATG |         F        |
-|     seq 2      | TCTGGCGCTCGACA |         R        |
-|     seq 3      | GGCGCTAATATGCG |         R        |
-|      ...       |       ...      |        ...       |
-|     seq N      | NNNNNNNNNNNNNN |         F        |
-+----------------+----------------+------------------+
++----------------+----------------+
+| Sequence Label | Input Sequence |
++----------------+----------------+
+|     seq 1      | CTACGTGAGCGATG |
+|     seq 2      | TCTGGCGCTCGACA |
+|     seq 3      | GGCGCTAATATGCG |
+|      ...       |       ...      |
+|     seq N      | NNNNNNNNNNNNNN |
++----------------+----------------+
 
 The script uses simple string regex'ing, but could be modified to use sequence alignment
 algorithms such as the Clustal Omega cli. 
