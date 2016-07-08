@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # imports
-import os, tkFileDialog, datetime, subprocess, csv
+import os, tkFileDialog, datetime, subprocess, csv, operator
 from Tkinter import Tk
 
 
@@ -36,21 +36,13 @@ class SeqSearch:
 		self.root_directory = "/Users/sdodd/Documents/Data/SeqSearch/"
 		self.run_directory = self.root_directory+"{}_seq_search/".format(self.initial_timestamp)
 		self.input_csv_path = "/Users/sdodd/Desktop/psm.csv"#str(raw_input("Input CSV location: "))
-		self.target_sequence_path = "/Users/sdodd/Documents/Data/Sequencing/Results/2016-07-01/"#str(raw_input("Target Sequences Folder: "))
+		self.target_sequence_path = "/Users/sdodd/Documents/Data/Sequencing/Results/2016-07-07/"#str(raw_input("Target Sequences Folder: "))
 
 		# Search data
-		"""
-		Hack work-around because I don't have time.
-		Fix this Fix this Fix this Fix this Fix this Fix this Fix this Fix this 
-		
-		self.reverse_primer = True # TODO TODO REMOVE THIS AND READ THIS VALUE PER SEQUENCE FROM CSV
-		
-		Fix this Fix this Fix this Fix this Fix this Fix this Fix this Fix this 
-		"""
 
-		self.identity_cutoff = 40
+		self.identity_cutoff = 99
 		self.searching = True
-		self.minimum_search_length = 10
+		self.minimum_search_length = 2
 		self.input_sequences = {}
 		self.target_sequences = {}
 		self.match_found = False
@@ -143,6 +135,12 @@ class SeqSearch:
 					# search while we haven't found a match
 					while not self.match_found:
 
+						if fasta_sequence in target_fasta:
+							print "match found: {} | {}".format(seq, fasta_sequence)
+							match_result = SequenceMatchResult(seq, fasta_sequence, target_sequence)
+							self.matched_sequences.append(match_result)
+							self.match_found = True
+
 						# get all of the sequence contigs in all positions of size
 						# from the full sequence to 10bp
 						for x in range(0, len(fasta_sequence) - self.minimum_search_length):
@@ -152,6 +150,10 @@ class SeqSearch:
 								current_contig = fasta_sequence[y:length_of_current_search_string + y]
 								if len(current_contig) >= self.minimum_search_length:
 									contigs_to_search_for.append(current_contig)
+									print 'current: {} ({} {})'.format(current_contig, len(current_contig), self.minimum_search_length)
+
+
+							print "{}".format(contigs_to_search_for)
 
 							# search for the search seqs in the target
 							for search_contig in contigs_to_search_for:
@@ -246,19 +248,22 @@ class SeqSearch:
 
 		self.log_line("PERCENT IDENTITY CUTOFF: {}".format(self.identity_cutoff))
 
+		# sort the matched sequences list
+		self.matched_sequences.sort(key=operator.attrgetter("target_seq"))
+
 		for index, result in enumerate(self.matched_sequences):
 			search_fasta = self.input_sequences[result.search_seq]
 			target_fasta = self.target_sequences[result.target_seq]
 			percent_hit_identity = float(len(result.match_contig)) / len(search_fasta) * 100
 
-			if percent_hit_identity > self.identity_cutoff and result.search_seq not in selected_results:
+			if percent_hit_identity > self.identity_cutoff:
 
 				selected_results.append(result.search_seq)
 
 				self.log_line("--------RESULT {} ----------------------------".format(len(selected_results)))
 				self.log_line("Search sequence: {}".format(result.search_seq))
 				self.log_line("Search FASTA: {}".format(search_fasta))
-				self.log_line("Match FASTA: {}".format(result.match_contig))
+				self.log_line("Match FASTA:  {}".format(result.match_contig))
 				self.log_line("Target sequence: {}".format(result.target_seq))
 				self.log_line("Target FASTA: {}".format(target_fasta))
 				self.log_line("Percent Hit Identity: {}".format(percent_hit_identity))
