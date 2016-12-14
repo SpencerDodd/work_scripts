@@ -36,7 +36,7 @@ class SeqSearch:
 		self.root_directory = "/Users/sdodd/Documents/Data/SeqSearch/"
 		self.run_directory = self.root_directory+"{}_seq_search/".format(self.initial_timestamp)
 		self.input_csv_path = "/Users/sdodd/Desktop/psm.csv"#str(raw_input("Input CSV location: "))
-		self.target_sequence_path = "/Users/sdodd/Documents/Data/Sequencing/Results/2016-07-07/"#str(raw_input("Target Sequences Folder: "))
+		self.target_sequence_path = "/Users/sdodd/Downloads/2016-07-1173H_536772/"#str(raw_input("Target Sequences Folder: "))
 
 		# Search data
 
@@ -101,7 +101,7 @@ class SeqSearch:
 	def get_input_sequences(self):
 		# read the data from the input file and save the sequence name / seq
 		with open(self.input_csv_path, 'rb') as input_file:
-			reader = csv.reader(input_file, delimiter=',')
+			reader = csv.reader(self.input_csv_path, dialect=csv.excel_tab)
 			for row in reader:
 				if not row[0] == "Label":
 					self.input_sequences[row[0]] = row[1]
