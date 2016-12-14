@@ -376,7 +376,6 @@ def main():
 		"/Users/spencerdodd/Documents/Research/Broad/MPG/alamarBlue Reading/2016_10_16 Viral Titration/6.xlsx",
 	]
 	
-
 	for data_file in data_files:
 		plate = Plate(data_file, 1900000000)
 		plate.plot_standards()
